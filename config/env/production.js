@@ -7,6 +7,6 @@ module.exports = {
     url: process.env.PROD_DB_URL
   },
   misc: {
-    showConsole: process.env.PROD_SHOW_CONSOLE || false
+    showConsole: process.env.PROD_SHOW_CONSOLE || false // log errors in console
   }
 };

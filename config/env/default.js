@@ -18,5 +18,9 @@ module.exports = {
       perPageLimit: 5
     }
   },
-  JWT_SECRET_KEY: process.env.JWT_SECRET_KEY
+  JWT_SECRET_KEY: process.env.JWT_SECRET_KEY,
+  sendgrid: {
+    user: process.env.SENDGRID_USER,
+    pass: process.env.SENDGRID_PASS
+  }
 };
