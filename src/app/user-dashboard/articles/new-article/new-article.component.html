@@ -1,0 +1,21 @@
+<form (submit)="onSubmit(newArticleForm)" #newArticleForm="ngForm" class="new-article-form">
+  <mat-form-field class="full-width">
+    <input matInput ngModel #title="ngModel" name="title" placeholder="Article Title" required maxlength="100">
+    <mat-error *ngIf="!title.valid && title.errors.required">Title is required!</mat-error>
+  </mat-form-field>
+
+  <mat-form-field class="full-width">
+    <textarea matInput ngModel #body="ngModel" name="body" rows="10" placeholder="Write your Article here..." required maxlength="1000"></textarea>
+    <mat-error *ngIf="!body.valid && body.errors.required">Article is required!</mat-error>
+  </mat-form-field>
+
+  <mat-form-field *ngIf="categories" class="only-row">
+    <mat-select multiple ngModel name="categories" placeholder="Categories">
+      <mat-option *ngFor="let category of categories" [value]="category._id">
+        {{category.category}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <button mat-flat-button type="submit" color="primary" class="only-row">Publish</button>
+</form>

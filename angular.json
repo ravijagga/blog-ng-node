@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "shayari-ng-node": {
+    "blog-ng-node": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/shayari-ng-node",
+            "outputPath": "dist/blog-ng-node",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -54,18 +54,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "shayari-ng-node:build"
+            "browserTarget": "blog-ng-node:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "shayari-ng-node:build:production"
+              "browserTarget": "blog-ng-node:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "shayari-ng-node:build"
+            "browserTarget": "blog-ng-node:build"
           }
         },
         "test": {
@@ -99,7 +99,7 @@
         }
       }
     },
-    "shayari-ng-node-e2e": {
+    "blog-ng-node-e2e": {
       "root": "e2e/",
       "projectType": "application",
       "architect": {
@@ -107,11 +107,11 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "shayari-ng-node:serve"
+            "devServerTarget": "blog-ng-node:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "shayari-ng-node:serve:production"
+              "devServerTarget": "blog-ng-node:serve:production"
             }
           }
         },
@@ -127,5 +127,5 @@
       }
     }
   },
-  "defaultProject": "shayari-ng-node"
+  "defaultProject": "blog-ng-node"
 }

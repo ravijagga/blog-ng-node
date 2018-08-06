@@ -1,0 +1,5 @@
+<article *ngFor="let article of articlesList">
+  <h2>{{ article.title }}</h2>
+  <p>{{ article.body }}</p>
+  <a *ngIf="article.user" [routerLink]="['/users', article.user._id]">{{ article.user.firstName}}</a>
+</article>

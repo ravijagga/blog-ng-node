@@ -1,0 +1,645 @@
+openapi: "3.0.1"
+
+info:
+  title: Blog Multi User Role API
+  description: Developed for learning purpose
+  version: 1.0.0
+  contact:
+    name: Ravi Jagga
+    email: contact@ravijagga.com
+    url: 'http://ravijagga.com/'
+  license:
+    name: MIT
+    url: 'https://opensource.org/licenses/MIT'
+
+servers:
+  - url: '/api/'
+    description: Development Server
+
+tags:
+  - name: Article
+  - name: Category
+  - name: User
+  - name: Email
+  - name: Database
+  - name: Auth
+
+paths:
+
+  /articles:
+    get:
+      summary: get all articles by page
+      tags:
+        - Article
+      parameters:
+        - $ref: '#/components/parameters/page'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ArticleResponseSchema'
+    post:
+      summary: create new article
+      tags:
+        - Article
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewArticlePayloadSchema'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArticleResponseSchema'
+      security:
+        - userAuthToken: []
+
+  /articles/{id}:
+    get:
+      summary: get article by id
+      tags:
+        - Article
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArticleResponseSchema'
+    put:
+      summary: modify an Article by id (users can update only their own articles, but admin can update anyone's)
+      description: users can update only their own articles, but admin can update anyone's
+      tags:
+        - Article
+      parameters:
+        - $ref: '#/components/parameters/id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditArticlePayloadSchema'
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArticleResponseSchema'
+      security:
+        - userAuthToken: []
+        - adminAuthToken: []
+    delete:
+      summary: delete a article by id
+      tags:
+        - Article
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        200:
+          $ref: '#/components/responses/deleteSuccess'
+      security:
+      - adminAuthToken: []
+
+
+  /categories:
+    get:
+      summary: get categories by page
+      tags:
+        - Category
+      parameters:
+        - $ref: '#/components/parameters/page'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CategoryResponseSchema'
+    post:
+      summary: create a new category
+      tags:
+        - Category
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewCategoryPayloadSchema'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryResponseSchema'
+      security:
+      - adminAuthToken: []
+
+  /categories/{id}:
+    get:
+      summary: get category by id
+      tags:
+        - Category
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryResponseSchema'
+    put:
+      summary: modify a category by id
+      tags:
+        - Category
+      parameters:
+        - $ref: '#/components/parameters/id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewCategoryPayloadSchema'
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryResponseSchema'
+      security:
+      - adminAuthToken: []
+    delete:
+      summary: delete a category by id
+      tags:
+        - Category
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        200:
+          $ref: '#/components/responses/deleteSuccess'
+      security:
+      - adminAuthToken: []
+
+
+  /users:
+    get:
+      summary: get all users by page
+      tags:
+        - User
+      parameters:
+        - $ref: '#/components/parameters/page'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserResponseSchema'
+    post:
+      summary: create  new user
+      tags:
+        - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewUserPayloadSchema'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponseSchema'
+
+  /users/{id}:
+    get:
+      summary: get user by id
+      tags:
+        - User
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponseSchema'
+    put:
+      summary: modify a user by id
+      tags:
+        - User
+      parameters:
+        - $ref: '#/components/parameters/id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditUserPayloadSchema'
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponseSchema'
+      security:
+      - userAuthToken: []
+    delete:
+      summary: delete a user by id
+      tags:
+        - User
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        200:
+          $ref: '#/components/responses/deleteSuccess'
+      security:
+      - adminAuthToken: []
+
+  /users/me:
+    get:
+      summary: get logged in user
+      tags:
+        - User
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponseSchema'
+      security:
+      - userAuthToken: []
+    put:
+      summary: modify logged in user profile
+      tags:
+        - User
+      parameters:
+        - $ref: '#/components/parameters/id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditUserPayloadSchema'
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponseSchema'
+      security:
+      - userAuthToken: []
+
+
+  /email/verify/{emailToken}:
+    get:
+      summary: verify email address
+      tags:
+        - Email
+      parameters:
+        - $ref: '#/components/parameters/emailToken'
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponseSchema'
+
+  /email/me:
+    put:
+      summary: change current user email
+      tags:
+        - Email
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditEmailPayloadSchema'
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponseSchema'
+      security:
+      - userAuthToken: []
+
+  /database/reset:
+    get:
+      summary: reset database
+      tags:
+        - Database
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponseSchema'
+
+  /auth:
+    post:
+      summary: get auth token (log in)
+      tags:
+        - Auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+              required:
+                - email
+                - password
+      responses:
+        200:
+          description: success
+          headers:
+            X-Auth-Token:
+              description: Authentication Token (API Token)
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+
+
+
+components:
+  responses:
+    deleteSuccess:
+      description: success
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessResponseSchema'
+
+  parameters:
+    page:
+      name: page
+      in: query
+      schema:
+        type: number
+    id:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        minLength: 24
+        maxLength: 24
+        pattern: "[a-zA-Z0-9]*"
+    emailToken:
+      name: emailToken
+      in: path
+      required: true
+      schema:
+        type: string
+
+
+  securitySchemes:
+    userAuthToken:
+      type: apiKey
+      name: X-Auth-Token
+      in: header
+    adminAuthToken:
+      type: apiKey
+      name: X-Auth-Token
+      in: header
+
+
+  schemas:
+    ArticleResponseSchema:
+      type: object
+      properties:
+        _id:
+          type: string
+        title:
+          type: string
+          maxLength: 256
+        body:
+          type: string
+        categories:
+          type: array
+          items:
+            type: object
+            properties:
+              _id:
+                type: string
+              category:
+                type: string
+        user:
+          type: object
+          properties:
+            _id:
+              type: string
+            firstName:
+              type: string
+            lastName:
+              type: string
+          required:
+          - _id
+          - firstName
+          - lastName
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+      - _id
+      - title
+      - body
+      - user
+      - createdAt
+      - updatedAt
+
+    NewArticlePayloadSchema:
+      type: object
+      properties:
+        title:
+          type: string
+          maxLength: 256
+        body:
+          type: string
+        categories:
+          type: array
+          items:
+            type: string
+      required:
+      - title
+      - body
+
+    EditArticlePayloadSchema:
+      type: object
+      properties:
+        title:
+          type: string
+        body:
+          type: string
+        categories:
+          type: array
+          items:
+            type: string
+
+    CategoryResponseSchema:
+      type: object
+      properties:
+        _id:
+          type: string
+        category:
+          type: string
+      required:
+      - _id
+      - category
+
+    NewCategoryPayloadSchema:
+      type: object
+      properties:
+        category:
+          type: string
+      required:
+      - category
+
+    UserResponseSchema:
+        type: object
+        properties:
+          _id:
+            type: string
+            minLength: 24
+            maxLength: 24
+            pattern: "[a-zA-Z0-9]*"
+          firstName:
+            type: string
+          lastName:
+            type: string
+          email:
+            type: string
+            format: email
+          gender:
+            type: string
+            enum:
+            - male
+            - female
+          verified:
+            type: boolean
+          isAdmin:
+            type: boolean
+          createdAt:
+            type: string
+            format: date-time
+          updatedAt:
+            type: string
+            format: date-time
+        required:
+        - _id
+        - firstName
+        - lastName
+        - email
+        - gender
+        - verified
+        - isAdmin
+        - createdAt
+        - updatedAt
+
+    NewUserPayloadSchema:
+        type: object
+        properties:
+          firstName:
+            type: string
+          lastName:
+            type: string
+          email:
+            type: string
+            format: email
+          password:
+            type: string
+            format: password
+          gender:
+            type: string
+            enum:
+            - male
+            - female
+        required:
+        - firstName
+        - lastName
+        - email
+        - gender
+
+    EditUserPayloadSchema:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        gender:
+          type: string
+          enum:
+          - male
+          - female
+
+    EditEmailPayloadSchema:
+      type: object
+      properties:
+        newEmail:
+          type: string
+          format: email
+
+    SuccessResponseSchema:
+      type: object
+      properties:
+        success:
+          type: object
+          properties:
+            message:
+              type: string
+          required:
+            - message
+      required:
+        - success
+
+    ErrorResponseSchema:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            message:
+              type: string
+          required:
+            - message
+      required:
+        - error
