@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "concurrently \"npm run serve\" \"npm run api\"",
-    "start:prod": "concurrently \"npm run build\" \"npm run api:prod\"",
+    "start:prod": "npm run api:prod",
     "api": "nodemon ./bin/server.js --ignore src/",
     "api:prod": "node ./bin/server.js",
     "serve": "ng serve --proxy-config proxy.config.json",
