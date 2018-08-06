@@ -2,7 +2,18 @@ openapi: "3.0.1"
 
 info:
   title: Blog Multi User Role API
-  description: Developed for learning purpose
+  description: "## How to get Authentication Token for testing:-
+  \n Send POST request to **'/auth'** endpoint (using **'Try it out'** button) using any of the below given login details:
+  <br/><br/> **User Account:**
+  <br/> Email: gaurav@kumar.com <br/> Pass: gauravkumar
+  <br/><br/> **Admin Account:**
+  <br/> Email: contact@ravijagga.com <br/> Pass: ravijagga
+  <br/><br/> Then Login using **'Authorize'** button on right side, below this description.
+
+  <br/><br/>\n ## Reset Database:- \n
+  Use **'/database/reset'** endpoint to reset database
+
+  <br/><br/>"
   version: 1.0.0
   contact:
     name: Ravi Jagga
